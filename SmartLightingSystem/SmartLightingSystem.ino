@@ -4,18 +4,17 @@
 #define PHOTO A0
 
 int lighting;
-int autoR;
-int autoG;
-int autoB;
+int autoL;
 long nowTime = 0;
 int delayTime = 1000;
 long previousTime = 0;
 int x;
+char data;
 
-void lightOn (byte r, byte g, byte b){
-  analogWrite(R,r);
-  analogWrite(G,g);
-  analogWrite(B,b);
+void lightOn (byte brightness){
+  analogWrite(R,brightness);
+  analogWrite(G,brightness);
+  analogWrite(B,brightness);
 
 }
 void lightOff (){
@@ -25,17 +24,13 @@ void lightOff (){
 }
 
 void autoLighting (byte minL,byte maxL, byte currentLighting){
-  if ( (currentLighting< minL)&&(autoR<255)&&(autoG<255)&&(autoB<255)){
-    autoR++;
-    autoG++;
-    autoB++;
-    lightOn(autoR,autoG,autoB);
+  if ( (currentLighting< minL)&&(autoL<255)){
+    autoL++;
+    lightOn(autoL);
   }
-    if ( (currentLighting> maxL)&&(autoR>0)&&(autoG>0)&&(autoB>0)){
-    autoR--;
-    autoG--;
-    autoB--;
-    lightOn(autoR,autoG,autoB);
+    if ( (currentLighting> maxL)&&(autoL>0)){
+    autoL--;
+    lightOn(autoL);
   }
   
 }
@@ -55,18 +50,16 @@ pinMode(R,OUTPUT);
 pinMode(G,OUTPUT);
 pinMode(B,OUTPUT);
 Serial.begin(9600);
+Serial3.begin(9600);
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-Serial.print(lighting);
+/*Serial.print(photoReader());
 Serial.print("\t");
-Serial.print(autoR);
-Serial.print("\t");
-Serial.print(autoG);
-Serial.print("\t");
-Serial.println(autoB);
-autoLighting(50,60,lighting);
+Serial.println(autoL);*/
+
+autoLighting(50,60,photoReader());
 
 delay(100);
 }
